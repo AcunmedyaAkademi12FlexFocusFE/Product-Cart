@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import Quotes from './Quotes';
 
 export default function App() {
 
@@ -73,60 +74,62 @@ export default function App() {
   }
 
   return (
-    <>
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder='Ürün ara...'
-          className='search-input'
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-      </div>
-      {isLoading && <p>Yükleniyor ...</p>}
-      <div className='products'>
-        {filteredProducts.map(x =>
-          <div className="product-item" key={x.id}>
-            <img src={x.thumbnail} alt={x.title} className='product-img' />
-            <h2>{x.title}</h2>
-            <strong>Açıklama:</strong> {x.description}
-            <strong>Kategori:</strong> {x.category}
-            <div className='product-info'>
-              <strong>Stok: </strong>{x.stock}
-              <strong>Fiyat: </strong>{x.price}₺
-            </div>
-            <button 
-              className='add-to-cart-btn' 
-              onClick={() => addToCart(x)}
-              disabled={x.stock <= 0}
-            >
-              {x.stock <= 0 ? 'Stok Yok' : 'Sepete Ekle'}
-            </button>
-          </div>
-        )}
-      </div>
-      {limit < total && <button className='loadmore-btn' onClick={handleClick}>Load More</button>}
-      <div className="cart">
-        <h2>Sepet</h2>
-        {cart.length === 0 ? (
-          <p>Sepetiniz boş.</p>
-        ) : (
-          <>
-            <ul>
-              {cart.map((x, i) => (
-                <li key={i}>
-                  {x.title} - {x.quantity} adet - {(x.price * x.quantity).toFixed(2)}₺
-                </li>
-              ))}
-            </ul>
-            <div className="cart-total">
-              Toplam tutar: {cart.reduce((sum, x) => sum + x.price * (x.quantity || 1), 0).toFixed(2)}₺
-            </div>
-            <button className='clear-cart-btn' onClick={clearCart}>Sepeti Temizle</button>
-          </>
-        )}
-      </div>
-    </>
+    // <>
+    //   <div className="search-container">
+    //     <input
+    //       type="text"
+    //       placeholder='Ürün ara...'
+    //       className='search-input'
+    //       value={search}
+    //       onChange={e => setSearch(e.target.value)}
+    //     />
+    //   </div>
+    //   {isLoading && <p>Yükleniyor ...</p>}
+    //   <div className='products'>
+    //     {filteredProducts.map(x =>
+    //       <div className="product-item" key={x.id}>
+    //         <img src={x.thumbnail} alt={x.title} className='product-img' />
+    //         <h2>{x.title}</h2>
+    //         <strong>Açıklama:</strong> {x.description}
+    //         <strong>Kategori:</strong> {x.category}
+    //         <div className='product-info'>
+    //           <strong>Stok: </strong>{x.stock}
+    //           <strong>Fiyat: </strong>{x.price}₺
+    //         </div>
+    //         <button 
+    //           className='add-to-cart-btn' 
+    //           onClick={() => addToCart(x)}
+    //           disabled={x.stock <= 0}
+    //         >
+    //           {x.stock <= 0 ? 'Stok Yok' : 'Sepete Ekle'}
+    //         </button>
+    //       </div>
+    //     )}
+    //   </div>
+    //   {limit < total && <button className='loadmore-btn' onClick={handleClick}>Load More</button>}
+    //   <div className="cart">
+    //     <h2>Sepet</h2>
+    //     {cart.length === 0 ? (
+    //       <p>Sepetiniz boş.</p>
+    //     ) : (
+    //       <>
+    //         <ul>
+    //           {cart.map((x, i) => (
+    //             <li key={i}>
+    //               {x.title} - {x.quantity} adet - {(x.price * x.quantity).toFixed(2)}₺
+    //             </li>
+    //           ))}
+    //         </ul>
+    //         <div className="cart-total">
+    //           Toplam tutar: {cart.reduce((sum, x) => sum + x.price * (x.quantity || 1), 0).toFixed(2)}₺
+    //         </div>
+    //         <button className='clear-cart-btn' onClick={clearCart}>Sepeti Temizle</button>
+    //       </>
+    //     )}
+    //   </div>
+    // </>
+
+    <Quotes />
   )
 }
 
