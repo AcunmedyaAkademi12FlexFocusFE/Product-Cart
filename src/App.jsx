@@ -28,14 +28,47 @@ export default function App() {
   const filteredProducts = products.filter(x => x.title.toLowerCase().includes(search.toLowerCase()));
 
   function addToCart(product) {
-    setCart([...cart, product]);
+
+    const productInCart = cart.find(item => item.id === product.id);
+    if(productInCart) {
+      // eğer sepette ürün varsa miktarını arttır
+      const updatedCart = cart.map(item => item.id === product.id ? 
+        {...item, quantity: (item.quantity || 1) + 1} : item
+      );
+      setCart(updatedCart);
+    } else {
+      // eğer sepette ürün yoksa sepete ekle
+      setCart([...cart, { ...product, quantity: 1 }]);
+    }
+
+    // setCart([...cart, product]);
     // burası products dizi ile alakalı değil. Burada fonksiyon çalıştığında ilgili ürünü
     // parametre olarak gönderiyoruz. Aslında ismin bir önemli yok. Biz buraya
     // "herhangibirurunadi" gibi bir adlandırma ya da örneğin "urun-onemsizad" gibi bir şey yazabiliriz
     // sadece gönderdiğimiz ürünü simgeleyen bir ad yazmış olduk.
+
+
+    // Stok azaltma
+    const updatedProducts = products.map(x => 
+      x.id === product.id ? {...x, stock: x.stock -1 } : x
+    )
+    setProducts(updatedProducts);
   }
 
   function clearCart() {
+
+    const updatedProducts = products.map(product => {
+      const cartItem = cart.find(item => item.id === product.id);
+      if(cartItem) {
+        // ürünün stoğunu geri yükle - ilgili miktar kadar arttır
+        return { ...product, stock: product.stock + cartItem.quantity};
+      }
+      return product; // sepette olmayan ürünleri aynen bırak bro
+    });
+
+    // ürün listesini güncelle 
+    setProducts(updatedProducts);
+    // sepeti sıfırla
     setCart([]);
   }
 
@@ -62,7 +95,13 @@ export default function App() {
               <strong>Stok: </strong>{x.stock}
               <strong>Fiyat: </strong>{x.price}₺
             </div>
-            <button className='add-to-cart-btn' onClick={() => addToCart(x)}>Sepete Ekle</button>
+            <button 
+              className='add-to-cart-btn' 
+              onClick={() => addToCart(x)}
+              disabled={x.stock <= 0}
+            >
+              {x.stock <= 0 ? 'Stok Yok' : 'Sepete Ekle'}
+            </button>
           </div>
         )}
       </div>
@@ -76,7 +115,7 @@ export default function App() {
             <ul>
               {cart.map((x, i) => (
                 <li key={i}>
-                  {x.title} - {x.price}₺
+                  {x.title} - {x.quantity} adet - {(x.price * x.quantity).toFixed(2)}₺
                 </li>
               ))}
             </ul>
